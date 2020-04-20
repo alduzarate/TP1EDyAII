@@ -1,0 +1,1 @@
+claves :: Ord k => d -> [k]
