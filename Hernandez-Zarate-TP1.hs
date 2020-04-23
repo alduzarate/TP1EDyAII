@@ -39,7 +39,22 @@ search (x:xs) (Node k v i m d) = if (x < k) then search (x:xs) i
                                                             else search xs m
 
 insert :: Ord k => [k] -> v -> TTree k v -> TTree k v
-insert = undefined
+insert (x:[]) v E = Leaf x v
+insert (x:xs) v E = Node x Nothing E (insert xs v E) E
+insert (x:[]) v (Leaf k val) = if (x == k) then Leaf k v
+                                           else if (x < k) then (Node k (Just val) (Leaf x v) E E)
+                                                           else (Node k (Just val) E E (Leaf x v))
+insert (x:xs) v (Leaf k val) = if (x == k) then (Node k (Just val)  E (insert xs v E) E)
+                                           else if (x < k) then (Node k (Just val) (insert (x:xs) v E) E E)
+                                                           else (Node k (Just val) E E (insert (x:xs) v E))
+insert (x:[]) v (Node k val i m d) = if (x == k) then (Node k (Just v) i m d)
+                                                 else if (x < k) then (Node k val (insert (x:[]) v i) m d)
+                                                                 else (Node k val i m (insert (x:[]) v d))
+insert (x:xs) v (Node k val i m d) = if (x == k) then (Node k Nothing i (insert xs v m) d)
+                                                 else if (x < k) then (Node k val (insert (x:xs) v i) m d)
+                                                                 else (Node k val i m (insert (x:xs) v d))                                                         
+
+--t1 = (insert "se" 8 (insert "si" 4 (insert "sin" 7 (insert "ras" 1 (insert "re" 16 (insert "red" 9 (insert "res" 4 (insert "reo" 2 E))))))))
 
 delete :: Ord k => [k] -> TTree k v -> TTree k v
 delete = undefined
