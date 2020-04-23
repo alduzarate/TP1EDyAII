@@ -1,5 +1,6 @@
 module Tp1 where
 
+--Autoras: Clara y Aldana
 
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
