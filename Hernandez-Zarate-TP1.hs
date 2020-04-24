@@ -59,9 +59,35 @@ insert (x:xs) v (Node k val i m d) = if (x == k) then (Node k Nothing i (insert 
 delete :: Ord k => [k] -> TTree k v -> TTree k v
 delete = undefined
 
-keys :: Ord k => d -> [k]
-keys = undefined 
+-- {("se", 8); ("si", 4); ("sin", 7); ("ras", 1); ("re", 16); ("red", 9); ("res", 4); ("reo", 2)}
+-- [['s','e'],['s','i'],['s','i','n'],...]
 
+--si voy para la izquierda o para la derecha, desestimo la clave del nodo de ese momento
+-- appendeo para formar la palabra solo si puedo ir por el medio
+{-
+keys :: TTree k v -> [[k]]
+keys E = []
+keys (Leaf k v) = [[k]]
+keys (Node k v i m d) = case v of
+                        Just a ->  [[k]] ++ keys i  ++ keys m ++ keys d 
+                        Nothing -> keys i ++ (k:keys m) ++ keys d
+-}
+-- string actual: lista de chars
+{-
+keys :: TTree k v -> [[k]]
+keys E = []
+keys t@((Node k v i m d)) = keys' t k
+  where keys' E stringActual = [[stringActual]]
+        keys' (Leaf k' v') stringActual =
+        keys' (Node key val i' m' d') stringActual =
+                case m of
+-}                  
+
+
+
+{-ultElem (x:[]) = x
+ultElem (x:xs) = ultElem(xs)
+-}
 
 {- class Dic k v d | d -> k v where 
   vacio :: d
