@@ -59,7 +59,17 @@ insert (x:xs) v (Node k val i m d) | (x == k) = (Node k Nothing i (insert xs v m
 --t1 = (insert "se" 8 (insert "si" 4 (insert "sin" 7 (insert "ras" 1 (insert "re" 16 (insert "red" 9 (insert "res" 4 (insert "reo" 2 E))))))))
 
 delete :: Ord k => [k] -> TTree k v -> TTree k v
-delete = undefined
+delete _ E  = E
+delete [] _ = error "La clave no es válida."
+delete (x:y:xs) (Leaf k v) = (Leaf k v) 
+delete (x:[]) (Leaf k v) = if (x == k) then E else (Leaf k v)
+delete (x:[]) (Node k v i m d)  | (k == x) = (Node k Nothing i m d)
+                                | (x > k)  = (Node k v i m (delete (x:[]) d)) 
+                                |otherwise = (Node k v (delete (x:[]) i) m d)
+                                
+delete (x:xs) (Node k v i m d)  | (x < k)  = (Node k v (delete (x:xs) i) m d)
+                                | (x > k)  = (Node k v i m (delete (x:xs) d))
+                                |otherwise = (Node k v i (delete xs m) d)
 
 
 keys :: TTree k v -> [[k]]
