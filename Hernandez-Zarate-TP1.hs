@@ -67,23 +67,7 @@ delete (x:[]) (Node k v i m d)  | (k == x) = (Node k Nothing i m d)
                                 
 delete (x:xs) (Node k v i m d)  | (x < k)  = (Node k v (delete (x:xs) i) m d)
                                 | (x > k)  = (Node k v i m (delete (x:xs) d))
-                                |otherwise = (Node k v i (delete xs m) d)
-
-
-{-keys :: TTree k v -> [[k]]
-keys E = []
-keys t@((Node k v i m d)) = keys' t []
-  where keys' E stringActual = []
-        keys' (Leaf k' v') stringActual = [ stringActual ++ [k']  ]
-        keys' (Node key Nothing i' m' d') stringActual = 
-                case m of
-                  E -> (keys' i' stringActual) ++ (keys' d' stringActual)
-                  otherwise -> (keys' i' stringActual) ++ (keys' m' (stringActual ++ [key])) ++ (keys' d' stringActual)
-        keys' (Node key (Just valor) i' m' d') stringActual = 
-                case m of
-                  E -> (keys' i' stringActual) ++ [(stringActual ++ [key])] ++ (keys' d' stringActual) 
-                  otherwise -> (keys' i' stringActual) ++ [(stringActual ++ [key])] ++ (keys' m' (stringActual ++ [key])) ++ (keys' d' stringActual)
--}               
+                                |otherwise = (Node k v i (delete xs m) d)          
 
 keys :: TTree k v -> [[k]]
 keys E = []
