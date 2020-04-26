@@ -1,10 +1,8 @@
-module Tp1 where
-
---Autoras: Clara Hernández y Aldana Zarate
-
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
+
+module Tp1 where
 
 import Data.Maybe
 
@@ -72,7 +70,7 @@ delete (x:xs) (Node k v i m d)  | (x < k)  = (Node k v (delete (x:xs) i) m d)
                                 |otherwise = (Node k v i (delete xs m) d)
 
 
-keys :: TTree k v -> [[k]]
+{-keys :: TTree k v -> [[k]]
 keys E = []
 keys t@((Node k v i m d)) = keys' t []
   where keys' E stringActual = []
@@ -85,20 +83,30 @@ keys t@((Node k v i m d)) = keys' t []
                 case m of
                   E -> (keys' i' stringActual) ++ [(stringActual ++ [key])] ++ (keys' d' stringActual) 
                   otherwise -> (keys' i' stringActual) ++ [(stringActual ++ [key])] ++ (keys' m' (stringActual ++ [key])) ++ (keys' d' stringActual)
-               
+-}               
+
+keys :: TTree k v -> [[k]]
+keys E = []
+keys t@((Node k v i m d)) = keys' t []
+  where keys' E stringActual = []
+        keys' (Leaf k' v') stringActual = [ stringActual ++ [k']  ]
+        keys' (Node key Nothing i' m' d') stringActual = 
+          (keys' i' stringActual) ++ (keys' m' (stringActual ++ [key])) ++ (keys' d' stringActual)
+        keys' (Node key (Just valor) i' m' d') stringActual = 
+          (keys' i' stringActual) ++ [(stringActual ++ [key])] ++ (keys' m' (stringActual ++ [key])) ++ (keys' d' stringActual)
 
 
 
-
-
-
-
-
-
-{- class Dic k v d | d -> k v where 
+class Dic k v d | d -> k v where 
   vacio :: d
-  insertar :: Ord k => [k] -> v -> d -> d
-  buscar :: Ord k => [k] -> d -> Maybe v
-  eliminar :: Ord k => [k] -> d -> d
+  insertar :: Ord k => k -> v -> d -> d
+  buscar :: Ord k => k -> d -> Maybe v
+  eliminar :: Ord k => k -> d -> d
   claves :: Ord k => d -> [k]
--}
+
+instance Ord k => Dic [k] v (TTree k v) where
+  vacio = E
+  insertar k v d = insert k v d
+  buscar k d = search k d
+  eliminar k d = delete k d
+  claves d = keys d
